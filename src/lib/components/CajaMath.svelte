@@ -42,7 +42,7 @@
   {#if disabled}
     <MathQuillStatic {latex} />
   {:else}
-    <MathQuill bind:latex={latex} {config} {filtro} />
+    <MathQuill bind:latex={latex} {config} />
   {/if}
   <Button color={"success"} size="sm" on:click>
     {disabled ? "Cambia función" : "Aceptar"}

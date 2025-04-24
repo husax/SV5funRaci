@@ -1,10 +1,9 @@
-<!-- @migration-task Error while migrating Svelte code: Unexpected token -->
 <script lang="ts">
 	import {
 		brd,
 		funRac,
 		//latexFun,
-		muestra,
+		muestra, // esto puede no ser necesario en el futuro
 		idRaices,
 		idObjs,
 		idFuns,
@@ -12,24 +11,24 @@
 	} from '$lib/tools/Almacen';
 	import { Col, Container, Row, Button } from '@sveltestrap/sveltestrap';
 	import { onDestroy} from 'svelte';
-	import CajaMath from './CajaMath.svelte';
-	import MsgModal from './MsgModal.svelte';
-	import JXGBoard from './JsxBoard.svelte';
-	import Acordeon from './Acordeon.svelte';
+	import CajaMath from '$lib/components/CajaMath.svelte';
+	import MsgModal from '$lib/components/MsgModal.svelte';
+	import JXGBoard from '$lib/components/JsxBoard.svelte';
+	import Acordeon from '$lib/components/Acordeon.svelte';
 
-	import TeXToLinealPyt from '../tools/TeXToLineal';
-	import {InfijaAPolacaFR} from '../tools/InfAPolInv';
-	import { ArrNum, ArrNumToString, cadBul, calcExtremos } from '../tools/ConvierteData';
+	import TeXToLinealPyt from '$lib/tools/TeXToLineal';
+	import {InfijaAPolacaFR} from '$lib/tools/InfAPolInv';
+	import { ArrNum, ArrNumToString, cadBul, calcExtremos } from '$lib/tools/ConvierteData';
 	import {
 		GraficaNueva,
 		GraficaRaices,
 		BorraGrafDer,
 		BorraRectaTang,
 		AnimaRT
-	} from '../tools/TrazosJSXGraph';
-	import { items } from '../tools/datosItems';
-	import type { Polinomio, FunRacional } from '../tools/Polinomio';
-	import type {paramF, paramD, GeomElem, funTipo} from '../tools/tipos';
+	} from '$lib/tools/TrazosJSXGraph';
+	import { items } from '$lib/tools/datosItems';
+	import type { Polinomio, FunRacional } from '$lib/tools/Polinomio';
+	import type {paramF, paramD, GeomElem, funTipo} from '$lib/tools/tipos';
 
 	interface cadyLatex {
 		expr: string;
@@ -126,7 +125,8 @@
 	const handleClick = () => {
 		if (!$muestra) { 
 			console.log(latex);
-			//muestra.update(() => Acepta());        aqui se hace la llamada a la función Acepta
+			muestra.update(() => !muestra);
+			//muestra.update(() => Acepta());       // aqui se hace la llamada a la función Acepta
 			console.log('animaTangId vale ' + $animaTangId);
 		} else {
 			BorraRectaTang();
@@ -197,8 +197,7 @@
 			cadFunRac = $funRac.toString();
 		}
 		else {
-			cadFunRac = ($funRac as FunRacional).numP.toString() + ',' +
-			($funRac as FunRacional).denomP.toString();
+			cadFunRac = $funRac.numP.toString() + ',' + $funRac.denomP.toString();
 		}
 		const url = 'http://127.0.0.1:5000/api/v1/polynomial/properties/' + cadFunRac;
 		const respPromesa = fetch(url, { method: 'GET', mode: 'cors' });
@@ -225,8 +224,7 @@
 				console.log(datosSympy.derivada.latex);
 				datosSympy.derivada.latex = "P'\\left(x\\right)=" + datosSympy.derivada.latex;
 				console.log(datosSympy.derivada.latex);
-				ventanaY = calcExtremos((x: number) =>
-									 (<funTipo>$funRac).Evalua(x), datosSympy.raices.rder1);
+				ventanaY = calcExtremos((x: number) => $funRac.Evalua(x), datosSympy.raices.rder1);
 				boardAttributes = {
 					axis: true,
 					boundingbox: [datosSympy.ventanaX[0], ventanaY[1] * 1.1,
@@ -248,12 +246,11 @@
 				if (datosSympy.hasOwnProperty('derivada')) {
 					items[4].contenido = datosSympy.derivada.latex;
 				}
- 
 			});
 		});
 		return true;
-	}
- */
+	} */
+
 	InfijaAPolacaFR.IniciaErrores();
 
 	const ActualizaGraf = (item: number) => {
@@ -273,7 +270,7 @@
 	const animaRectaTang = () => {
 		const param: paramD = {
 			func: $idFuns[0],
-			deriv: (x: number) => (<funTipo>$funRac).Derivada().Evalua(x),
+			deriv: (x: number) => $funRac.Derivada().Evalua(x),
 			vxmin: datosSympy.ventanaX[0],
 			vxmax: datosSympy.ventanaX[1],
 			color: 'blue',
@@ -283,11 +280,11 @@
 	};
 </script>
 
-<MsgModal isOpen={open} {headMsg} {msg} on:cierra={toggle} {bgColor}/>
+<MsgModal isOpen={open} {headMsg} {msg} {bgColor}/> <!-- quite on:cierra -->
 <Container fluid>
 	<Row>
 		<Col sm={4}>
-			<CajaMath bind:latex disabled={$muestra} on:click={handleClick} />
+			<CajaMath bind:latex={latex} disabled={$muestra} on:click={handleClick} />
 			<Acordeon {items} {ActualizaGraf} muestra={$muestra} {animaRectaTang} />
 		</Col>
 		<Col sm={8}>

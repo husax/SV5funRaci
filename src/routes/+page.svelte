@@ -1,6 +1,6 @@
 <script lang="ts">
   import Cabeza from "$lib/components/Cabeza.svelte";
-  // import Cuerpo from "./components/Cuerpo.svelte";
+  import Cuerpo from "./components/Cuerpo.svelte";
 	import { MathQuillSetup } from "svelte-mathquill";
 	import JSXSetup from "$lib/components/JSXSetup.svelte";
   import { Styles } from "@sveltestrap/sveltestrap";
@@ -48,5 +48,5 @@
 <div>
 
   <Cabeza {datosH} />
-	<!-- <Cuerpo /> -->
+	<Cuerpo />
 </div>
