@@ -75,13 +75,17 @@
 		ventanaY?: number[];
 	}
 
-	let latex = '\\frac{x^3-3x+1}{x^2-4}';
+	let latex = $state('\\frac{x^3-3x+1}{x^2-4}');
 	let msg = '';
 	let headMsg="";
 	let bgColor="bg-danger"
-	let disabled;
+	let disabled=$state(true);
 
-	muestra.subscribe((valor) => (disabled = valor));
+	$effect(() => {
+		Acepta();
+	});
+
+	//muestra.subscribe((valor) => (disabled = valor));
 
 	let datosSympy: dataEnJs= {
 		racional: false,
@@ -160,7 +164,7 @@
 	function toggle() {
 		open = !open;
 	}
-/* 
+ 
 	function Acepta() {
 		console.log(latex);
 		let cadFun = latex;
@@ -249,7 +253,7 @@
 			});
 		});
 		return true;
-	} */
+	} 
 
 	InfijaAPolacaFR.IniciaErrores();
 
@@ -284,8 +288,8 @@
 <Container fluid>
 	<Row>
 		<Col sm={4}>
-			<CajaMath bind:latex={latex} disabled={$muestra} on:click={handleClick} />
-			<Acordeon {items} {ActualizaGraf} muestra={$muestra} {animaRectaTang} />
+			<CajaMath bind:latex={latex} bind:editaFun={disabled} /> 
+			<Acordeon {items} {ActualizaGraf} muestra={!disabled} {animaRectaTang} />
 		</Col>
 		<Col sm={8}>
 			<JXGBoard {boardAttributes} {jxgCajaId}/>

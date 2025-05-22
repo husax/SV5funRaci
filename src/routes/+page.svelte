@@ -1,7 +1,7 @@
 <script lang="ts">
   import Cabeza from "$lib/components/Cabeza.svelte";
   import Cuerpo from "./components/Cuerpo.svelte";
-	import { MathQuillSetup } from "svelte-mathquill";
+	import MathQuillSetup from "$lib/components/MathQuillSetup.svelte";
 	import JSXSetup from "$lib/components/JSXSetup.svelte";
   import { Styles } from "@sveltestrap/sveltestrap";
 	import type { DatosHead, OptMenu } from "$lib/tools/tipos";
@@ -43,7 +43,7 @@
 </script>
 
 <Styles />
-<MathQuillSetup/>
+<MathQuillSetup />
 <JSXSetup/>
 <div>
 

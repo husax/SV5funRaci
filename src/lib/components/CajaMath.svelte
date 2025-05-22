@@ -1,13 +1,19 @@
 <script lang="ts">
   import { InputGroup, InputGroupText, Button } from "@sveltestrap/sveltestrap";
-  import { MathQuill, MathQuillStatic } from "svelte-mathquill";
+  import MathQuillEdit from "./MathQuillEdit.svelte";
+  import MathQuillStatic from "./MathQuillStatic.svelte";
   interface Props {
     latex: string;
-    disabled: boolean;
+    editaFun: boolean;
   }
 
-  let { latex = $bindable(), disabled }: Props = $props();
+  let { latex = $bindable(), editaFun= $bindable() }: Props = $props();
+  console.log(editaFun);
+  //let editaFun = $state(!disabled);
 
+  function toggle() {
+    editaFun=!editaFun;
+  }
 
   function filtro(e: any) {
     const teclasEsp = [
@@ -39,13 +45,13 @@
 
 <InputGroup size="lg" class="mb-3">
   <InputGroupText id="basic-addon1">P(x) =</InputGroupText>
-  {#if disabled}
-    <MathQuillStatic {latex} />
+  {#if editaFun}
+    <MathQuillEdit bind:latex={latex} {config} {filtro} />
   {:else}
-    <MathQuill bind:latex={latex} {config} />
+    <MathQuillStatic {latex} />
   {/if}
-  <Button color={"success"} size="sm" on:click>
-    {disabled ? "Cambia función" : "Aceptar"}
+  <Button color={"success"} size="sm" onclick={toggle}>
+    {editaFun ? "Aceptar" : "Cambia función" }
   </Button>
 </InputGroup>
 
