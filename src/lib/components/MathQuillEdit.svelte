@@ -3,11 +3,11 @@
   import { onMount, onDestroy } from "svelte";
   import mathQuill from "@openwebwork/mathquill";
 
-  let { latex = $bindable(), config, filtro } = $props();
+  let { latex = $bindable(), config, filtro, idCaja } = $props();
 
 onMount(() =>{
   const MQ = mathQuill.getInterface();
-  const caja=document.getElementById("cajaSpan");
+  const caja=document.getElementById(idCaja);
   if (!caja) {
     console.error("Elemento no encontrado");
     return;
@@ -25,7 +25,7 @@ onDestroy(() => {
 });
 </script>
 
-<span id="cajaSpan"
+<span id={idCaja}
   role="textbox"
   tabindex="0"
   class="bordeSpan"

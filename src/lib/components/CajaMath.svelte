@@ -5,14 +5,16 @@
   interface Props {
     latex: string;
     editaFun: boolean;
+    clicBoton: () => void;
   }
 
-  let { latex = $bindable(), editaFun= $bindable() }: Props = $props();
+  let { latex = $bindable(), editaFun= $bindable(), clicBoton}: Props = $props();
   console.log(editaFun);
   //let editaFun = $state(!disabled);
 
   function toggle() {
     editaFun=!editaFun;
+    clicBoton();  
   }
 
   function filtro(e: any) {
@@ -46,9 +48,9 @@
 <InputGroup size="lg" class="mb-3">
   <InputGroupText id="basic-addon1">P(x) =</InputGroupText>
   {#if editaFun}
-    <MathQuillEdit bind:latex={latex} {config} {filtro} />
+    <MathQuillEdit bind:latex={latex} {config} {filtro} idCaja="cajaMathEdit" />
   {:else}
-    <MathQuillStatic {latex} />
+    <MathQuillStatic {latex} idCaja="cajaMath"/>
   {/if}
   <Button color={"success"} size="sm" onclick={toggle}>
     {editaFun ? "Aceptar" : "Cambia función" }

@@ -75,16 +75,22 @@
 		ventanaY?: number[];
 	}
 
-	let latex = $state('\\frac{x^3-3x+1}{x^2-4}');
+	let latex = '\\frac{x^3-3x+1}{x^2-4}'
 	let msg = '';
 	let headMsg="";
 	let bgColor="bg-danger"
 	let disabled=$state(true);
 
+	$inspect(disabled, latex, msg, headMsg);
+/* 
 	$effect(() => {
-		Acepta();
+		console.log('empieza efecto  lateral');
+		if (!disabled) {
+			console.log("entro a acepta");
+			Acepta();
+		}
 	});
-
+ */
 	//muestra.subscribe((valor) => (disabled = valor));
 
 	let datosSympy: dataEnJs= {
@@ -127,6 +133,8 @@
 
 
 	const handleClick = () => {
+
+/*		
 		if (!$muestra) { 
 			console.log(latex);
 			muestra.update(() => !muestra);
@@ -142,6 +150,21 @@
 			}
 			console.log('animaTangId vale ' + $animaTangId);
 			muestra.update((valor) => !valor);
+		}
+*/
+		if (disabled) {
+			BorraRectaTang();
+			BorraGrafDer();
+			console.log('animaTangId vale antes' + $animaTangId);
+			if ($animaTangId !== 0) {
+				window.cancelAnimationFrame($animaTangId);
+				animaTangId.set(0);
+			}
+			console.log('animaTangId vale ' + $animaTangId);
+		} else {
+			console.log(latex);
+			disabled= !Acepta();
+			console.log('animaTangId vale ' + $animaTangId);
 		}
 	};
 
@@ -177,7 +200,7 @@
 		if (msg !== '') {
 			headMsg="Expresión inválida";
 			open = !open;
-			disabled = true;
+			//disabled = true;  // actualiza estado aqui
 			return false;
 		}
 		let procesaInfija = new InfijaAPolacaFR(cad);
@@ -288,7 +311,7 @@
 <Container fluid>
 	<Row>
 		<Col sm={4}>
-			<CajaMath bind:latex={latex} bind:editaFun={disabled} /> 
+			<CajaMath bind:latex={latex} bind:editaFun={disabled} clicBoton={handleClick} /> 
 			<Acordeon {items} {ActualizaGraf} muestra={!disabled} {animaRectaTang} />
 		</Col>
 		<Col sm={8}>

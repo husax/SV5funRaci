@@ -7,7 +7,7 @@
     BorraGrafDer,
     MuestraRT,
   } from "../tools/TrazosJSXGraph";
-  //import { MathQuillStatic } from "svelte-mathquill";
+  import MathQuillStatic from "./MathQuillStatic.svelte";
 
   interface Props {
     latex: string;
@@ -56,9 +56,9 @@
 </script>
 
 <div class="cajaAc">
-  <!--
-  <span>P'(x) = </span>  -->
-  <!-- <MathQuillStatic {latex} /> -->
+  
+  <!-- <span>P'(x) = </span>  -->
+  <MathQuillStatic {latex} idCaja="cajaDeriv"/>
   <ListGroup class="list-group-horizontal">
     <ListGroupItem>
       <input

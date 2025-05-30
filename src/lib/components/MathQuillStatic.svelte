@@ -2,10 +2,15 @@
   import { onMount } from "svelte";
   import mathQuill from "@openwebwork/mathquill";
 
-  let { latex } = $props();
+  interface Props {
+    latex: string;
+    idCaja: string;
+  }
+
+  let { latex, idCaja } = $props();
   onMount(() =>{
   const MQ = mathQuill.getInterface();
-  const caja=document.getElementById("cajafija");
+  const caja=document.getElementById(idCaja);
   if (!caja) {
     console.error("Elemento no encontrado");
     return;
@@ -14,7 +19,7 @@
 });
 </script>
 
-<span id="cajafija" class="bordeSpan">{latex}</span>
+<span id={idCaja} class="bordeSpan">{latex}</span>
 
 <style>
   .bordeSpan {
