@@ -48,9 +48,9 @@
 <InputGroup size="lg" class="mb-3">
   <InputGroupText id="basic-addon1">P(x) =</InputGroupText>
   {#if editaFun}
-    <MathQuillEdit bind:latex={latex} {config} {filtro} idCaja="cajaMathEdit" />
+    <MathQuillEdit bind:latex={latex} {config} {filtro} />
   {:else}
-    <MathQuillStatic {latex} idCaja="cajaMath"/>
+    <MathQuillStatic {latex} />
   {/if}
   <Button color={"success"} size="sm" onclick={toggle}>
     {editaFun ? "Aceptar" : "Cambia función" }

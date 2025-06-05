@@ -56,9 +56,7 @@
 </script>
 
 <div class="cajaAc">
-  
-  <!-- <span>P'(x) = </span>  -->
-  <MathQuillStatic {latex} idCaja="cajaDeriv"/>
+  <MathQuillStatic {latex} />
   <ListGroup class="list-group-horizontal">
     <ListGroupItem>
       <input

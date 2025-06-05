@@ -31,7 +31,7 @@
 
 <Tarjeta {isOpen} {textos}>
   <div class="centra">
-    <MathQuillStatic {latex} idCaja="tarjeta"/>
+    <MathQuillStatic {latex} />
   </div>  
   <Deslizador valor={deslProps.value} {deslProps} {actualizaVal}/>
   <div class="separa">

@@ -39,7 +39,7 @@ function handleUpdate(event: any) {
   <NavbarBrand href="#home">
     Funciones {datosH.funcTipo}: {datosH.tarea} 
   </NavbarBrand>
-  <NavbarToggler on:click={toggle}/>
+  <NavbarToggler onclick={toggle}/>
   <Collapse {isOpen} navbar expand="lg" on:update={handleUpdate}>
     <Nav  class="ms-auto" navbar>
       <NavItem>

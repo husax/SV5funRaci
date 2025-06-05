@@ -4,22 +4,22 @@
 
   interface Props {
     latex: string;
-    idCaja: string;
   }
 
-  let { latex, idCaja } = $props();
+  let { latex } : Props = $props();
+  let caja: HTMLSpanElement | null = null;
+
   onMount(() =>{
-  const MQ = mathQuill.getInterface();
-  const caja=document.getElementById(idCaja);
-  if (!caja) {
-    console.error("Elemento no encontrado");
-    return;
-  }
-  MQ.StaticMath(caja);
+    const MQ = mathQuill.getInterface();
+    if (!caja) {
+      console.error("no se hizo el bind de caja al span creado en MathQuillStatic");
+      return;
+    } 
+    MQ.StaticMath(caja);
 });
 </script>
 
-<span id={idCaja} class="bordeSpan">{latex}</span>
+<span bind:this={caja} class="bordeSpan">{latex}</span>
 
 <style>
   .bordeSpan {

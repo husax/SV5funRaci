@@ -1,19 +1,21 @@
 <script lang="ts">
   import Tarjeta from './Tarjeta.svelte';
-  import { ListGroup, ListGroupItem } from '@sveltestrap/sveltestrap';
+  import { Button, ListGroup, ListGroupItem } from '@sveltestrap/sveltestrap';
   import MathQuillStatic  from "$lib/components/MathQuillStatic.svelte";
   interface Props {
     isOpen: boolean;
     textos: Array<string>;
     arrLatex: Array<string>;
     opcion: any;
+    apagaTutor: any;
   }
 
   let {
     isOpen,
     textos,
     arrLatex,
-    opcion
+    opcion,
+    apagaTutor
   }: Props = $props();
 
 </script>
@@ -21,12 +23,15 @@
 <Tarjeta {isOpen} {textos}>
   <ListGroup>
     {#each arrLatex as latex, ind }
-      <ListGroupItem tag="button" id={ind.toString()} on:click={opcion} >
-        <MathQuillStatic {latex} idCaja="tajRaices" />
+      <ListGroupItem color="primary" tag="button" id={ind.toString()} onclick={opcion} >
+        <MathQuillStatic {latex} />
       </ListGroupItem>          
     {/each}
-    <ListGroupItem tag="button" href="#" action >
+    <ListGroupItem color="primary" tag="button" href="#" action >
       Otro Polinomio
+    </ListGroupItem>
+    <ListGroupItem color="secondary" tag="button" onclick={apagaTutor}>
+      Regresa
     </ListGroupItem>
   </ListGroup>
 </Tarjeta>

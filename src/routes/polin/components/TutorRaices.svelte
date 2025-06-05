@@ -1,10 +1,7 @@
 <script lang="ts">
-  import Tarjeta from './Tarjeta.svelte';
 	import TarjetaRaicesSelecFun from './TarjetaRaicesSelecFun.svelte';
 	import TarjetaDeslizaPar from './TarjetaDeslizaPar.svelte';
-  import {
-    Button
-  } from '@sveltestrap/sveltestrap';
+  import { onDestroy } from 'svelte';
 	import type { DeslPr, GeomElem, funR, paramF } from '$lib/tools/tipos';
 	import { ConstruyeFunParFijo, Raices } from '$lib/tools/TrazosPolinJSX';
 	import TeXToLinealPyt from '$lib/tools/TeXToLineal';
@@ -24,10 +21,12 @@
     max: "5",
     step:".1",
     value: "-2",
-  })
+  });
+
+  let {apagaTutor} =$props();
 
 
-  let textosCont= $state(["Revisa gráficamente cuántas raices reales tiene un polinomio."
+  let textosCont= ["Revisa gráficamente cuántas raices reales tiene un polinomio."
                 + "<br> Elige un tipo de polinomio.",
                 "Mueve el deslizador para observar cómo cambia el número"
                 + " de raices de: ",
@@ -41,11 +40,11 @@
                 " donde no tenga raices reales. @a = ",
                 "Ahora dame el mayor intervalo de valores de @a" + 
                 " donde se tengan @n raices distintas."
-              ]);
-  let textosTarj= $state(['Raices', 'Número de Raices', textosCont[0]]);
+              ];
+  let textosTarj=$state( ['Raices', 'Número de Raices', textosCont[0]]);
   const guardaTT= textosTarj.slice();
   const guardaTC= textosCont.slice();
-  let textosMult: Array<string> = $state();
+  let textosMult: Array<string> = $state(Array<string>());
   
   let fun: funR;
   let infpol: InfijaAPolacaFR;
@@ -109,7 +108,7 @@
   }
 
   function actualizaVal (e: Event): void {
-    deslProps.value= e.target.value;
+    deslProps.value= e.target ? e.target.value : deslProps.value;
     //resp1=deslProps.value;
     infpol.variables[deslProps.id]=Number.parseFloat(deslProps.value);
     let funRac=InfijaAPolacaFR.EvalFuncRac(infpol.postFija, infpol.variables);
@@ -127,15 +126,19 @@
     IsOpenSeq[2]=false;
     IsOpenSeq[0]=true;
     textosTarj= guardaTT.slice();
-    textosCont= guardaTC.slice();
+    textosCont= guardaTC.slice(); // recupera contenido inicial
     BorraObjGraficos($brd, pF);
     //IsOpenSeq= IsOpenSeq;
 
   }
 
+  onDestroy(() => {
+    console.log("Destruye TutorRaices");
+  });
+
 </script>
 
-  <TarjetaRaicesSelecFun isOpen={IsOpenSeq[0]} textos={textosTarj} {arrLatex} {opcion} />
+  <TarjetaRaicesSelecFun isOpen={IsOpenSeq[0]} textos={textosTarj} {arrLatex} {opcion} {apagaTutor}/>
   <TarjetaDeslizaPar isOpen={IsOpenSeq[1]} textos={textosTarj} otrosTextos={textosCont[2]}
                     {latex} {deslProps} {actualizaVal} {contyPreg} />
   <TarjetaPreguntaRaices {IsOpenSeq} textos={textosTarj} otrosTextos={textosMult}

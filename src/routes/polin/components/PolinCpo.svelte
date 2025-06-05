@@ -35,20 +35,26 @@ let accionTutor= (e: MouseEvent) => {
 	isOpen=false;
 	tutoriales=true;
 }
+let apagaTutor= () => {
+	tutoriales=false;
+	isOpen=true;
+}
+
+
 </script>
 <Container fluid>
 	<Row>
 		<Col sm={4}>
 			<Tarjeta bind:this={tarjeta} {isOpen}
 			textos={textosTarj[0]} >
-				<Button id="entrar" color={"success"} on:click={accionTutor}>
+				<Button id="entrar" color={"success"} onclick={accionTutor}>
 					Entrar
 				</Button>
 			</Tarjeta>
 		</Col>
 		<Col sm={4}>
 			<Tarjeta  {isOpen} textos={textosTarj[1]}>
-				<Button id="entrar" color={"success"} on:click={accionTutor}>
+				<Button id="entrar" color={"success"} onclick={accionTutor}>
 					Entrar
 				</Button>
 			</Tarjeta>
@@ -57,7 +63,7 @@ let accionTutor= (e: MouseEvent) => {
 	{#if tutoriales}
 		<Row>
 			<Col sm={4}>
-				<TutorRaices/>
+				<TutorRaices {apagaTutor}/>
 			</Col>
 			<Col sm={8}>
 				<JXGBoard {boardAttributes} {jxgCajaId} />
