@@ -1,20 +1,19 @@
 <script lang="ts">
+	import { getBrd } from '$lib/tools/EstadosGlobales.svelte';
 	import {
-		brd,
 		funRac,
-		//latexFun,
-		muestra, // esto puede no ser necesario en el futuro
 		idRaices,
 		idObjs,
 		idFuns,
 		animaTangId,
 	} from '$lib/tools/Almacen';
-	import { Col, Container, Row, Button } from '@sveltestrap/sveltestrap';
+	import { Col, Container, Row } from '@sveltestrap/sveltestrap';
 	import { onDestroy} from 'svelte';
 	import CajaMath from '$lib/components/CajaMath.svelte';
 	import MsgModal from '$lib/components/MsgModal.svelte';
 	import JXGBoard from '$lib/components/JsxBoard.svelte';
 	import Acordeon from '$lib/components/Acordeon.svelte';
+
 
 	import TeXToLinealPyt from '$lib/tools/TeXToLineal';
 	import {InfijaAPolacaFR} from '$lib/tools/InfAPolInv';
@@ -24,7 +23,10 @@
 		GraficaRaices,
 		BorraGrafDer,
 		BorraRectaTang,
-		AnimaRT
+		AnimaRT,
+
+		BorraRaices
+
 	} from '$lib/tools/TrazosJSXGraph';
 	import { items } from '$lib/tools/datosItems';
 	import type { Polinomio, FunRacional } from '$lib/tools/Polinomio';
@@ -75,23 +77,16 @@
 		ventanaY?: number[];
 	}
 
-	let latex = '\\frac{x^3-3x+1}{x^2-4}'
-	let msg = '';
-	let headMsg="";
+	let latex = $state('\\frac{x^3-3x+1}{x^2-4}');
+	let msg = $state('');
+	let headMsg=$state("");
+	let open = $state(false);
+
 	let bgColor="bg-danger"
 	let disabled=$state(true);
 
 	$inspect(disabled, latex, msg, headMsg);
-/* 
-	$effect(() => {
-		console.log('empieza efecto  lateral');
-		if (!disabled) {
-			console.log("entro a acepta");
-			Acepta();
-		}
-	});
- */
-	//muestra.subscribe((valor) => (disabled = valor));
+
 
 	let datosSympy: dataEnJs= {
 		racional: false,
@@ -105,7 +100,6 @@
 		ventanaX: new Array<number>,
 	};
 
-	let open = false;
 	let boardAttributes = {
 		axis: true,
 		boundingbox: [-20, 10, 10, -15]
@@ -128,33 +122,15 @@
 
 	onDestroy( () => {
   	console.log("destruyó componente Cuerpo");
-		muestra.set(false);
+		//muestra.set(false);
 	});
 
 
 	const handleClick = () => {
-
-/*		
-		if (!$muestra) { 
-			console.log(latex);
-			muestra.update(() => !muestra);
-			//muestra.update(() => Acepta());       // aqui se hace la llamada a la función Acepta
-			console.log('animaTangId vale ' + $animaTangId);
-		} else {
-			BorraRectaTang();
-			BorraGrafDer();
-			console.log('animaTangId vale antes' + $animaTangId);
-			if ($animaTangId !== 0) {
-				window.cancelAnimationFrame($animaTangId);
-				animaTangId.set(0);
-			}
-			console.log('animaTangId vale ' + $animaTangId);
-			muestra.update((valor) => !valor);
-		}
-*/
 		if (disabled) {
-			BorraRectaTang();
-			BorraGrafDer();
+			BorraRaices(getBrd(), $idRaices);
+			BorraRectaTang(getBrd(), $idObjs);
+			BorraGrafDer(getBrd(), $idFuns);
 			console.log('animaTangId vale antes' + $animaTangId);
 			if ($animaTangId !== 0) {
 				window.cancelAnimationFrame($animaTangId);
@@ -200,7 +176,6 @@
 		if (msg !== '') {
 			headMsg="Expresión inválida";
 			open = !open;
-			//disabled = true;  // actualiza estado aqui
 			return false;
 		}
 		let procesaInfija = new InfijaAPolacaFR(cad);
@@ -212,12 +187,11 @@
 			return false;
 		}
 		funRac.set(InfijaAPolacaFR.EvalFuncRac(procesaInfija.postFija,
-		 procesaInfija.variables));
-		 
+							procesaInfija.variables));
 		if ($funRac === undefined) {
 			open=!open;
 			headMsg="Expresión inválida";
-			msg=InfijaAPolacaFR.errores[- InfijaAPolacaFR.nErr];
+			msg=InfijaAPolacaFR.errores[33]; // "No se pudo crear la función racional";
 			return false;
 		}
 		if ($funRac.esPolinomio) {
@@ -261,7 +235,7 @@
 				paramFunc.name = 'P';
 				paramFunc.color = 'green';
 				paramFunc.idFuns = $idFuns;
-				idFuns.set(GraficaNueva($brd, paramFunc));
+				idFuns.set(GraficaNueva(getBrd(), paramFunc));
 				if (datosSympy.raices.hasOwnProperty('rfun')) {
 					items[0].contenido = ArrNumToString(datosSympy.raices.rfun, 3, textoRaices);
 					paramFunc.raices = datosSympy.raices.rfun;
@@ -287,7 +261,7 @@
 				$idRaices = new Array<GeomElem>;
 				return;
 			}
-			$idRaices = GraficaRaices($brd, paramFunc);
+			$idRaices = GraficaRaices(getBrd(), paramFunc);
 		} else if (item === 1) {
 			//BorraGrafDer();
 			//BorraRectaTang();
@@ -303,7 +277,7 @@
 			color: 'blue',
 			idObjs: $idObjs
 		};
-		AnimaRT($brd, param);
+		AnimaRT(getBrd(), param);
 	};
 </script>
 

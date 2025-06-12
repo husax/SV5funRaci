@@ -768,7 +768,8 @@ class InfijaAPolaca {
     InfijaAPolaca.errores[31] =
       "El exponente debe ser una constante. No se obtiene una función racional";  
       InfijaAPolaca.errores[32] = "Únicamente puedo obtener la raiz cuadrada de números"; 
-    }
+      InfijaAPolaca.errores[33] = "No se obtiene una función racional o polinómica"; 
+}
 }
 
 // esta clase solo agrega la evaluación como funcion Racional

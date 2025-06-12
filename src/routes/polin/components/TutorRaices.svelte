@@ -1,17 +1,16 @@
 <script lang="ts">
-	import TarjetaRaicesSelecFun from './TarjetaRaicesSelecFun.svelte';
+	import { onDestroy } from 'svelte';
+  import TarjetaRaicesSelecFun from './TarjetaRaicesSelecFun.svelte';
 	import TarjetaDeslizaPar from './TarjetaDeslizaPar.svelte';
-  import { onDestroy } from 'svelte';
-	import type { DeslPr, GeomElem, funR, paramF } from '$lib/tools/tipos';
+  	import TarjetaPreguntaRaices from './TarjetaPreguntaRaices.svelte';
+
+	import type { DeslPr, funR, paramF } from '$lib/tools/tipos';
 	import { ConstruyeFunParFijo, Raices } from '$lib/tools/TrazosPolinJSX';
 	import TeXToLinealPyt from '$lib/tools/TeXToLineal';
 	import { InfijaAPolacaFR } from '$lib/tools/InfAPolInv';
-	import { brd, resp1 } from '$lib/tools/Almacen';
 	import { BorraObjGraficos, GraficaRaices } from '$lib/tools/TrazosJSXGraph';
-	import TarjetaPreguntaRaices from './TarjetaPreguntaRaices.svelte';
+	import { getBrd } from '$lib/tools/EstadosGlobales.svelte';
 	
-  //export let isOpen: boolean;
-
 
   let latex: string = $state("");
   let arrLatex: string[]= ['f(x)=x^2+4x+a', 'g(x)=x^3-3x+b'];
@@ -48,7 +47,6 @@
   
   let fun: funR;
   let infpol: InfijaAPolacaFR;
-  let f: GeomElem;
   let IsOpenSeq= $state([ true, false, false]);
 
 
@@ -82,10 +80,11 @@
       traza: false,
       idFuns: [],
       idRaices:[],
-    };  
-    BorraObjGraficos($brd, pF);
-    pF.idFuns.push($brd.create('functiongraph', [fun]));
-    GraficaRaices($brd, pF);
+    };
+    const board= getBrd();
+    BorraObjGraficos(board, pF);
+    pF.idFuns.push(board.create('functiongraph', [fun]));
+    GraficaRaices(board, pF);
   }
 
   const contyPreg= (e: Event): void => {
@@ -100,9 +99,9 @@
     textosCont[5]=textosCont[5].replaceAll("@a", nomParam);
     if (deslProps.id !== "a") {
       textosCont[4]=textosCont[4].replace("doble.",
-                                           "doble y una raiz simple.");
+                                          "doble y una raiz simple.");
       textosCont[5]=textosCont[5].replace("no tenga raices reales.",
-                                           "tenga una raiz real.");
+                                          "tenga una raiz real.");
     }
     textosMult= textosCont.slice(3, 6);
   }
@@ -117,9 +116,10 @@
       coefs= funRac.coefs;  
     }
     pF.raices= Raices(coefs);
-    BorraObjGraficos($brd, pF);
-    pF.idFuns.push($brd.create('functiongraph', [fun]));
-    GraficaRaices($brd, pF);
+    const board= getBrd();
+    BorraObjGraficos(board, pF);
+    pF.idFuns.push(board.create('functiongraph', [fun]));
+    GraficaRaices(board, pF);
   }
 
   function regresa () {
@@ -127,8 +127,7 @@
     IsOpenSeq[0]=true;
     textosTarj= guardaTT.slice();
     textosCont= guardaTC.slice(); // recupera contenido inicial
-    BorraObjGraficos($brd, pF);
-    //IsOpenSeq= IsOpenSeq;
+    BorraObjGraficos(getBrd(), pF);
 
   }
 

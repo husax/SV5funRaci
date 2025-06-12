@@ -1,35 +1,31 @@
 <!-- @migration-task Error while migrating Svelte code: Can't migrate code with beforeUpdate. Please migrate by hand. -->
 <script lang="ts">
-import JXG from '../tools/jsxgraphcore.mjs';
-import { onMount, beforeUpdate, onDestroy} from 'svelte';
-import { brd } from '../tools/Almacen';
+  import JXG from '../tools/jsxgraphcore.mjs';
+  import { onMount, beforeUpdate, onDestroy} from 'svelte';
+  //import { brd } from '../tools/Almacen';
+  import { getBrd, setBrd } from '$lib/tools/EstadosGlobales.svelte';
 
-export let boardAttributes= {
-  axis: true,
-  boundingbox: [-10, 10, 10, -10]
-};
-export let jxgCajaId: string;
+  export let boardAttributes= {
+    axis: true,
+    boundingbox: [-10, 10, 10, -10]
+  };
+  export let jxgCajaId: string;
 
-onMount( () => {
-  let board= JXG.JSXGraph.initBoard(jxgCajaId, boardAttributes);
-  brd.set(board);
-});
+  onMount( () => {
+    let board=JXG.JSXGraph.initBoard(jxgCajaId, boardAttributes);
+    board.setBoundingBox(boardAttributes.boundingbox);
+    setBrd(board);
+    console.log("montó componente JsxGraph");
+    console.log("version jsxgraph:", JXG.version);
+  });
 
-onDestroy( () => {
-  console.log("destruyó componente JsxGraph");
-  brd.set(undefined);
-});
+  onDestroy( () => {
+    console.log("destruyó componente JsxGraph");
+    setBrd(null);
+  });
 
-beforeUpdate(() => {
-  if ($brd !== undefined) {
-    $brd.setBoundingBox(boardAttributes.boundingbox);
-  }
-});
-
-console.log("version jsxgraph:", JXG.version);
-
-//export {brd};
 </script>
+
 <div id={jxgCajaId} class="jxgbox" ></div>
 
 <style>

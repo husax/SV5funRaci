@@ -3,6 +3,8 @@
   import { onDestroy} from 'svelte';
   import { BorraRectaTang, BorraGrafDer } from "../tools/TrazosJSXGraph"; 
   import CajaDeriv from "./CajaDeriv.svelte";
+	import { getBrd } from "$lib/tools/EstadosGlobales.svelte";
+  import { idObjs, idFuns } from "../tools/Almacen";
   interface Props {
     items: any;
     ActualizaGraf: any;
@@ -30,8 +32,8 @@
       <AccordionItem
         on:toggle={(e) => {
           if (e.detail) {
-            BorraGrafDer();
-            BorraRectaTang();
+            BorraGrafDer(getBrd(), $idFuns);
+            BorraRectaTang(getBrd(),$idObjs);
             ActualizaGraf(ind);
           }
         }}

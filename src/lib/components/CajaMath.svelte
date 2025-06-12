@@ -10,7 +10,6 @@
 
   let { latex = $bindable(), editaFun= $bindable(), clicBoton}: Props = $props();
   console.log(editaFun);
-  //let editaFun = $state(!disabled);
 
   function toggle() {
     editaFun=!editaFun;

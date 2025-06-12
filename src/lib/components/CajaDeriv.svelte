@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Button, ListGroup, ListGroupItem } from "@sveltestrap/sveltestrap";
-  import { brd, funRac, idFuns, idObjs, animaTangId } from "../tools/Almacen";
+  import { funRac, idFuns, idObjs, animaTangId } from "../tools/Almacen";
+  import { getBrd } from "$lib/tools/EstadosGlobales.svelte";
   import {
     AgregaGrafica,
     BorraRectaTang,
@@ -25,7 +26,7 @@
       color: "red",
       idFuns: $idFuns,
     };
-    idFuns.update(() => AgregaGrafica($brd, paramFunc));
+    idFuns.update(() => AgregaGrafica(getBrd(), paramFunc));
   };
 
   const GrafDerONo = () => {
@@ -43,7 +44,7 @@
       color: "blue",
       idObjs: $idObjs,
     };
-    idObjs.update(() => MuestraRT($brd, param));
+    idObjs.update(() => MuestraRT(getBrd(), param));
   };
 
   const GrafTangONo = () => {

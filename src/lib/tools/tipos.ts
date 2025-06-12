@@ -3,7 +3,7 @@ import type { Polinomio, FunRacional } from './Polinomio';
 type Board= typeof JXG.Board;
 type GeomElem= typeof JXG.GeometryElement;
 type funTipo= FunRacional | Polinomio;
-type funR= (x:number) => number;
+type funR= (x:number) => number | undefined;
 type funEvent= (e: Event) => void;
 type funReal= funR | undefined;
 
