@@ -14,7 +14,6 @@
 	import JXGBoard from '$lib/components/JsxBoard.svelte';
 	import Acordeon from '$lib/components/Acordeon.svelte';
 
-
 	import TeXToLinealPyt from '$lib/tools/TeXToLineal';
 	import {InfijaAPolacaFR} from '$lib/tools/InfAPolInv';
 	import { ArrNum, ArrNumToString, cadBul, calcExtremos } from '$lib/tools/ConvierteData';
@@ -24,13 +23,11 @@
 		BorraGrafDer,
 		BorraRectaTang,
 		AnimaRT,
-
 		BorraRaices
-
 	} from '$lib/tools/TrazosJSXGraph';
 	import { items } from '$lib/tools/datosItems';
 	import type { Polinomio, FunRacional } from '$lib/tools/Polinomio';
-	import type {paramF, paramD, GeomElem, funTipo} from '$lib/tools/tipos';
+	import type {paramF, paramD, GeomElem, brdAttrib, funTipo} from '$lib/tools/tipos';
 
 	interface cadyLatex {
 		expr: string;
@@ -81,12 +78,15 @@
 	let msg = $state('');
 	let headMsg=$state("");
 	let open = $state(false);
-
-	let bgColor="bg-danger"
 	let disabled=$state(true);
+	let boardAttributes: brdAttrib = $state({
+		axis: true,
+		boundingbox: [-10, 10, 10, -10]
+	});
 
 	$inspect(disabled, latex, msg, headMsg);
 
+	let bgColor="bg-danger";
 
 	let datosSympy: dataEnJs= {
 		racional: false,
@@ -100,11 +100,7 @@
 		ventanaX: new Array<number>,
 	};
 
-	let boardAttributes = {
-		axis: true,
-		boundingbox: [-20, 10, 10, -15]
-	};
-
+	
 	let jxgCajaId='cajaInicio';
 
 	let paramFunc: paramF= {
@@ -231,9 +227,11 @@
 					boundingbox: [datosSympy.ventanaX[0], ventanaY[1] * 1.1,
 					datosSympy.ventanaX[1], ventanaY[0] * 1.1]
 				};
+				$state.snapshot(boardAttributes);
 				paramFunc.func = (x: number) => (<funTipo>$funRac).Evalua(x);
 				paramFunc.name = 'P';
 				paramFunc.color = 'green';
+				paramFunc.ventana = boardAttributes
 				paramFunc.idFuns = $idFuns;
 				idFuns.set(GraficaNueva(getBrd(), paramFunc));
 				if (datosSympy.raices.hasOwnProperty('rfun')) {
@@ -272,6 +270,7 @@
 		const param: paramD = {
 			func: $idFuns[0],
 			deriv: (x: number) => $funRac.Derivada().Evalua(x),
+			name: "tangente",
 			vxmin: datosSympy.ventanaX[0],
 			vxmax: datosSympy.ventanaX[1],
 			color: 'blue',

@@ -1,6 +1,6 @@
 import { Punto } from "./vector";
 import { animaTangId } from "./Almacen";
-import type { paramF, paramD, GeomElem, Board } from "./tipos";
+import type { paramF, paramD, paramFunR, GeomElem, Board } from "./tipos";
 
 const GraficaNueva: (brd:Board, param: paramF) => GeomElem = (brd: Board , param: paramF) => {
   brd.suspendUpdate();
@@ -8,6 +8,10 @@ const GraficaNueva: (brd:Board, param: paramF) => GeomElem = (brd: Board , param
   console.log(param.func(1));
   //console.log(param.func(4));
   //console.log(param.func(-2));
+  brd.setAttribute({
+    boundingbox: param.ventana.boundingbox,
+    axis: param.ventana.axis,
+  });
   const fun1 = brd.create("functiongraph", [param.func], {
     strokewidth: 2,
     name: param.name,
@@ -73,21 +77,15 @@ const BorraObjGraficos = (brd: Board, param: paramF) => {
 };
 
 const BorraRaices= (board: Board, raices: GeomElem[]) =>{
-  while (raices.length > 0) {
+  while (raices && raices.length > 0) {
     board.removeObject(raices.pop().id, false);
   }
 }
 
 const BorraRectaTang = (board: Board, objs: GeomElem[]) => {
-  /* idObjs.subscribe((valor) => { 
-    objs = valor;
-  });
- */
   const unsuscribe = animaTangId.subscribe((id) => {
     window.cancelAnimationFrame(id);
-    //console.log(id);
   });
-
   while (objs.length > 0) {
     board.removeObject(objs.pop().id, false);
   }
@@ -96,20 +94,12 @@ const BorraRectaTang = (board: Board, objs: GeomElem[]) => {
 };
 
 const BorraGrafDer = (board: Board, funs: GeomElem[]) => {
-  /*
-  idFuns.subscribe((valor) => {
-    funs = valor;
-  });
- 
-  brd.subscribe((b) => {
-    board = b;
-  }); */
   if (funs.length > 1) {
     board.removeObject(funs.pop().id, false);
   }
 };
 
-const AgregaGrafica = (brd: Board, param: paramF) => {
+const AgregaGrafica = (brd: Board, param: paramFunR) => {
   brd.suspendUpdate();
   const fun1 = brd.create("functiongraph", [param.func], {
     strokewidth: 2,

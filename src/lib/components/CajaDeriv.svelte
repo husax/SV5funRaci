@@ -9,6 +9,7 @@
     MuestraRT,
   } from "../tools/TrazosJSXGraph";
   import MathQuillStatic from "./MathQuillStatic.svelte";
+	import type { paramFunR } from "$lib/tools/tipos";
 
   interface Props {
     latex: string;
@@ -20,7 +21,7 @@
   let siRectaTan = $state(false);
 
   const GrafDer = () => {
-    let paramFunc = {
+    let paramFunc : paramFunR = {
       func: (x: number) => $funRac.Derivada().Evalua(x),
       name: "P'",
       color: "red",
@@ -33,7 +34,7 @@
     if (siGraf) {
       GrafDer();
     } else {
-      BorraGrafDer();
+      BorraGrafDer(getBrd(), $idFuns);
     }
   };
 
@@ -51,7 +52,7 @@
     if (siRectaTan) {
       muestraRectaTang();
     } else {
-      BorraRectaTang();
+      BorraRectaTang(getBrd(), $idObjs);
     }
   };
 </script>

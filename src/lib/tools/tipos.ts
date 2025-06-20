@@ -7,7 +7,6 @@ type funR= (x:number) => number | undefined;
 type funEvent= (e: Event) => void;
 type funReal= funR | undefined;
 
-
 interface OptMenu {
   href: string;
   texto: string;
@@ -20,14 +19,26 @@ interface DatosHead {
   opcMnu: OptMenu[];
 }
 
+interface brdAttrib {
+  axis: boolean;
+  boundingbox: number[];
+}
 interface paramF {
   func: funR;
   name: string;
   color: string;
   raices: number[];
   traza: boolean;
+  ventana: brdAttrib
   idFuns: GeomElem[];
   idRaices: GeomElem[];
+}
+
+interface paramFunR {
+  func: funR;
+  name: string;
+  color: string;
+  idFuns: GeomElem[];
 }
 
 interface paramD {
@@ -52,11 +63,13 @@ export type {
   DatosHead,
   paramF,
   paramD,
+  paramFunR,
   GeomElem,
   Board,
+  brdAttrib,
   funTipo,
   DeslPr,
   funR,
   funReal,
   funEvent
-}
+} 

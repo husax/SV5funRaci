@@ -129,7 +129,7 @@ class Polinomio {
       }
     }
     return s;
-  }
+  } 
 
   Cociente(q: Polinomio): Polinomio {
       if (this.grado < q.grado) {
