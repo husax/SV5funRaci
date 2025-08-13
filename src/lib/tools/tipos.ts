@@ -1,4 +1,5 @@
-import type JXG from './jsxgraphcore.mjs';
+//import type JXG from './jsxgraphcore.mjs';
+
 import type { Polinomio, FunRacional } from './Polinomio';
 type Board= typeof JXG.Board;
 type GeomElem= typeof JXG.GeometryElement;

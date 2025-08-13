@@ -1,11 +1,11 @@
-import type {Board} from "./tipos";
 
-let brd = $state(null);
 
-export function getBrd() : Board {
+let brd = $state({} as JXG.Board);
+
+export function getBrd() : JXG.Board {
   return brd;
 }
 
-export function setBrd(value: Board) {
+export function setBrd(value: JXG.Board) {
   brd = value;
 }
