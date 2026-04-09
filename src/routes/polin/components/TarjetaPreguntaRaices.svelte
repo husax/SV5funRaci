@@ -2,10 +2,10 @@
   import Tarjeta from './Tarjeta.svelte';
   import { Button, ListGroup, ListGroupItem, Tooltip} from '@sveltestrap/sveltestrap';
   import {Icon} from "svelte-icons-pack";
-  import {IoCheckmarkCircle, IoCloseCircle, IoAlertCircle} from "svelte-icons-pack/io"
+  import {IoCheckmarkCircle, IoCloseCircle} from "svelte-icons-pack/io"
   import MathQuillStatic  from "$lib/components/MathQuillStatic.svelte";
 	import Deslizador from '$lib/components/Deslizador.svelte';
-  import type { DeslPr, funEvent, paramF } from '$lib/tools/tipos';
+  import type { DeslPr, funEvent } from '$lib/tools/tipos';
   import { resp1} from "$lib/tools/Almacen";
   
   //export let isOpen: boolean;

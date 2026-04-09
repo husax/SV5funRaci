@@ -13,7 +13,7 @@
 	
 
   let latex: string = $state("");
-  let arrLatex: string[]= ['f(x)=x^2+4x+a', 'g(x)=x^3-3x+b'];
+  let arrLatex: string[]= ['f(x)=x^2+4x+a', 'g(x)=x^3-3x+b', ' h(x)=ax^5+bx^4+cx^3+dx^2+ex+f'];
   let deslProps: DeslPr= $state({
     id: "a",
     min: "-5",
@@ -72,16 +72,24 @@
         infpol.variables["x"]=x;
         return InfijaAPolacaFR.Eval(infpol.postFija, infpol.variables);
       }
+
+    const board= getBrd();
+    let brdAttributes= {
+      axis: true,
+      boundingbox: board.getBoundingBox(),
+    }
+
     pF={
       func: fun,
       name: "f(x)",
       color: "red",
       raices: Raices(coefs),
       traza: false,
+      ventana: brdAttributes,
       idFuns: [],
       idRaices:[],
     };
-    const board= getBrd();
+    
     BorraObjGraficos(board, pF);
     pF.idFuns.push(board.create('functiongraph', [fun]));
     GraficaRaices(board, pF);

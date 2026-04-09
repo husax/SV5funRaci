@@ -1,8 +1,8 @@
-//import type JXG from './jsxgraphcore.mjs';
+
 
 import type { Polinomio, FunRacional } from './Polinomio';
-type Board= typeof JXG.Board;
-type GeomElem= typeof JXG.GeometryElement;
+//type Board= typeof JXG.Board;
+//type GeomElem= typeof JXG.GeometryElement;
 type funTipo= FunRacional | Polinomio;
 type funR= (x:number) => number | undefined;
 type funEvent= (e: Event) => void;
@@ -30,25 +30,25 @@ interface paramF {
   color: string;
   raices: number[];
   traza: boolean;
-  ventana: brdAttrib
-  idFuns: GeomElem[];
-  idRaices: GeomElem[];
+  ventana: brdAttrib;
+  idFuns: JXG.GeometryElement[];
+  idRaices: JXG.GeometryElement[];
 }
 
 interface paramFunR {
   func: funR;
   name: string;
   color: string;
-  idFuns: GeomElem[];
+  idFuns: JXG.GeometryElement[];
 }
 
 interface paramD {
-  func: GeomElem;  // (x:number) => number;
+  func: JXG.GeometryElement;  // (x:number) => number;
   deriv: (x: number) => number;
   vxmin: number;
   vxmax: number;
   color: string;
-  idObjs: GeomElem[];
+  idObjs: JXG.GeometryElement[];
 }
 
 interface DeslPr {
@@ -65,8 +65,6 @@ export type {
   paramF,
   paramD,
   paramFunR,
-  GeomElem,
-  Board,
   brdAttrib,
   funTipo,
   DeslPr,

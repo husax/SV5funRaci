@@ -1,8 +1,8 @@
 import { Punto } from "./vector";
 import { animaTangId } from "./Almacen";
-import type { paramF, paramD, paramFunR, GeomElem, Board } from "./tipos";
+import type { paramF, paramD, paramFunR } from "./tipos";
 
-const GraficaNueva: (brd:Board, param: paramF) => GeomElem = (brd: Board , param: paramF) => {
+const GraficaNueva: (brd: JXG.Board, param: paramF) => JXG.GeometryElement[] = (brd: JXG.Board , param: paramF) => {
   brd.suspendUpdate();
   BorraObjGraficos(brd, param);
   console.log(param.func(1));
@@ -18,7 +18,7 @@ const GraficaNueva: (brd:Board, param: paramF) => GeomElem = (brd: Board , param
     strokeColor: param.color,
   });
   brd.unsuspendUpdate();
-  param.idFuns.push(fun1);
+  param.idFuns.push(fun1 as JXG.GeometryElement);
   return param.idFuns.slice();
 };
 
@@ -47,7 +47,7 @@ const YaTrazadas = (r: number[], p:paramF) => {
   return true;
 };
 
-const GraficaRaices = (brd: Board, param: paramF) => {
+const GraficaRaices = (brd: JXG.Board, param: paramF) => {
   const raices = EliminaMultiples(param.raices);
   if (YaTrazadas(raices, param)) {
     return param.idRaices;
@@ -65,7 +65,7 @@ const GraficaRaices = (brd: Board, param: paramF) => {
   return param.idRaices; // ver esto
 };
 
-const BorraObjGraficos = (brd: Board, param: paramF) => {
+const BorraObjGraficos = (brd:JXG.Board, param: paramF) => {
   brd.suspendUpdate();
   while (param.idFuns.length > 0) {
     brd.removeObject(param.idFuns.pop().id, false);
@@ -76,44 +76,44 @@ const BorraObjGraficos = (brd: Board, param: paramF) => {
   brd.unsuspendUpdate();
 };
 
-const BorraRaices= (board: Board, raices: GeomElem[]) =>{
+const BorraRaices= (brd: JXG.Board, raices: JXG.GeometryElement[]) =>{
   while (raices && raices.length > 0) {
-    board.removeObject(raices.pop().id, false);
+   brd.removeObject(raices.pop().id, false);
   }
 }
 
-const BorraRectaTang = (board: Board, objs: GeomElem[]) => {
+const BorraRectaTang = (brd: JXG.Board, objs: JXG.GeometryElement[]) => {
   const unsuscribe = animaTangId.subscribe((id) => {
     window.cancelAnimationFrame(id);
   });
   while (objs.length > 0) {
-    board.removeObject(objs.pop().id, false);
+    brd.removeObject(objs.pop().id, false);
   }
   unsuscribe();
   animaTangId.update(() => 0);
 };
 
-const BorraGrafDer = (board: Board, funs: GeomElem[]) => {
+const BorraGrafDer = (brd: JXG.Board, funs: JXG.GeometryElement[]) => {
   if (funs.length > 1) {
-    board.removeObject(funs.pop().id, false);
+    brd.removeObject(funs.pop().id, false);
   }
 };
 
-const AgregaGrafica = (brd: Board, param: paramFunR) => {
+const AgregaGrafica = (brd: JXG.Board, param: paramFunR) => {
   brd.suspendUpdate();
   const fun1 = brd.create("functiongraph", [param.func], {
     strokewidth: 2,
     name: param.name,
     strokecolor: param.color,
   });
-  param.idFuns.push(fun1);
+  param.idFuns.push(fun1 as JXG.GeometryElement);
   brd.unsuspendUpdate();
   return param.idFuns;
 };
 
 // convierte puntos en pixeles a puntos en el sistema de coordenadas de brd
 // recibe un punto o un arreglo de puntos.
-function DesdePixelesP (pto: Punto , brd: Board): Punto {
+function DesdePixelesP (pto: Punto , brd: JXG.Board): Punto {
     const [xmin, ymax, xmax, ymin] = brd.getBoundingBox();
     const pixXUnidad = new Punto(
       brd.canvasWidth / (xmax - xmin),
@@ -123,11 +123,11 @@ function DesdePixelesP (pto: Punto , brd: Board): Punto {
     return new Punto(escala.x + xmin, escala.y + ymax);
 }
 
-function DesdePixeles (ptos: Punto[] , brd: Board): Punto[] {
+function DesdePixeles (ptos: Punto[] , brd: JXG.Board): Punto[] {
   return (ptos).map((p: Punto) => DesdePixelesP(p, brd));
 };
 
-const xInicialGlider = (brd: Board, func: GeomElem) => {
+const xInicialGlider = (brd: JXG.Board, func: JXG.GeometryElement) => {
   const ptosInter = DesdePixeles([new Punto(0, 0), new Punto(30, 0)], brd);
   const seg = ptosInter[1].x - ptosInter[0].x;
   let vy;
@@ -144,8 +144,8 @@ const xInicialGlider = (brd: Board, func: GeomElem) => {
   };
 };
 
-const AnimaRT = (brd: Board, param: paramD) => {
-  const pg = param.idObjs[0];
+const AnimaRT = (brd: JXG.Board, param: paramD) => {
+  const pg = param.idObjs[0] as JXG.Glider;
   const { xini } = xInicialGlider(brd, param.func);
   const xfin = param.vxmax;
   let inicio: number;
@@ -169,7 +169,7 @@ const AnimaRT = (brd: Board, param: paramD) => {
   animaTangId.update(() => requestAnimationFrame(animaGlider));
 };
 
-const MuestraRT = (brd: Board, param: paramD) => {
+const MuestraRT = (brd: JXG.Board, param: paramD) => {
   const objCreados = [];
   const { xini, seg } = xInicialGlider(brd, param.func);
   const pg = brd.create("glider", [xini, param.func.Y(xini), param.func], {

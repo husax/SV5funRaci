@@ -9,7 +9,7 @@
 		};
 
 	let jxgCajaId='cajaPolin';
-	let arrL=['x^3-3x+1', '5x^5-3x^2+1'];
+	//let arrL=['x^3-3x+1', '5x^5-3x^2+1'];
 	let isOpen= $state(true);
 	let textosTarj=[
 		['Tutoriales de polinomios',
@@ -23,7 +23,7 @@
 		]	
 	];
 	let tutoriales= $state(false);
-	let isOpenTut=true;
+	//let isOpenTut=true;
 	let accionTutor= (e: MouseEvent) => {
 		
 		//carga jsxgraph
@@ -45,14 +45,14 @@
 		<Col sm={4}>
 			<Tarjeta {isOpen}
 			textos={textosTarj[0]} >
-				<Button id="entrar" color={"success"} onclick={accionTutor}>
+				<Button id="tutorPol" color="success" onclick={accionTutor}>
 					Entrar
 				</Button>
 			</Tarjeta>
 		</Col>
 		<Col sm={4}>
 			<Tarjeta  {isOpen} textos={textosTarj[1]}>
-				<Button id="entrar" color={"success"} onclick={accionTutor}>
+				<Button id="calcPol" color="success" onclick={accionTutor}>
 					Entrar
 				</Button>
 			</Tarjeta>
