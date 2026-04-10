@@ -5,7 +5,7 @@
   	import TarjetaPreguntaRaices from './TarjetaPreguntaRaices.svelte';
 
 	import type { DeslPr, funR, paramF } from '$lib/tools/tipos';
-	import { ConstruyeFunParFijo, Raices } from '$lib/tools/TrazosPolinJSX';
+	import { ConstruyeFunParFijo, ConstruyeFunParamFijos, Raices } from '$lib/tools/TrazosPolinJSX';
 	import TeXToLinealPyt from '$lib/tools/TeXToLineal';
 	import { InfijaAPolacaFR } from '$lib/tools/InfAPolInv';
 	import { BorraObjGraficos, GraficaRaices } from '$lib/tools/TrazosJSXGraph';
@@ -14,6 +14,21 @@
 
   let latex: string = $state("");
   let arrLatex: string[]= ['f(x)=x^2+4x+a', 'g(x)=x^3-3x+b', ' h(x)=ax^5+bx^4+cx^3+dx^2+ex+f'];
+
+  let deslizadores: Array<DeslPr> = $state(Array<DeslPr>(6).fill(
+      { id: "a",
+        min: "-5",
+      max: "5",
+      step:".1",
+      value: "-2",
+    }));
+  
+  deslizadores.forEach((desl, ind) => {
+    const ids=["a", "b", "c", "d", "e", "f"];
+    desl.id= ids[ind];
+    desl.value= (ind - 3).toString();
+  });
+  
   let deslProps: DeslPr= $state({
     id: "a",
     min: "-5",
@@ -52,6 +67,37 @@
 
   let pF: paramF;
 
+  const procesaPolGrado5= (cad: string, ind: string) => {
+    infpol= ConstruyeFunParamFijos(cad, deslizadores);
+    let funRac=InfijaAPolacaFR.EvalFuncRac(infpol.postFija, infpol.variables);
+    let coefs= funRac !== undefined ? funRac.coefs : new Array<number>;
+    fun= (x: number) => {
+        infpol.variables["x"]=x;
+        return InfijaAPolacaFR.Eval(infpol.postFija, infpol.variables);
+    }
+    const board= getBrd();
+    let brdAttributes= {
+      axis: true,
+      boundingbox: board.getBoundingBox(),
+    }
+    // hay que calcular las raices reales en python
+    pF={
+      func: fun,
+      name: "f(x)",
+      color: "red",
+      raices: Raices(coefs),
+      traza: false,
+      ventana: brdAttributes,
+      idFuns: [],
+      idRaices:[],
+    };
+    BorraObjGraficos(board, pF);
+    pF.idFuns.push(board.create('functiongraph', [fun]));
+      //GraficaRaices(board, pF);
+
+
+  }
+
   const opcion= (e: MouseEvent) => {
     let ind= e.currentTarget.id;
     let cad=arrLatex[ind];
@@ -61,6 +107,10 @@
     latex= cad;
     cad= cad.split('=')[1]; // lo que esta despues del igual
     cad= TeXToLinealPyt.insertaAster(cad);
+    if (ind === "2") {
+      procesaPolGrado5(cad, ind);
+      return;
+    }
     deslProps.id= ind === "0"? "a" : "b";
     infpol=ConstruyeFunParFijo(cad, deslProps);
     let funRac=InfijaAPolacaFR.EvalFuncRac(infpol.postFija, infpol.variables);
@@ -147,7 +197,7 @@
 
   <TarjetaRaicesSelecFun isOpen={IsOpenSeq[0]} textos={textosTarj} {arrLatex} {opcion} {apagaTutor}/>
   <TarjetaDeslizaPar isOpen={IsOpenSeq[1]} textos={textosTarj} otrosTextos={textosCont[2]}
-                    {latex} {deslProps} {actualizaVal} {contyPreg} />
+                    {latex} {deslizadores} {actualizaVal} {contyPreg} />
   <TarjetaPreguntaRaices {IsOpenSeq} textos={textosTarj} otrosTextos={textosMult}
                     {latex} {deslProps} {actualizaVal} {regresa}/>
 

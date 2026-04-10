@@ -11,6 +11,17 @@ function ConstruyeFunParFijo(cad: string, desl: DeslPr) {
   return infpol;
 }
 
+function ConstruyeFunParamFijos(cad: string, desls: Array<DeslPr>) {
+  const infpol= new InfijaAPolacaFR(cad);
+  infpol.InfAPol();
+  if (Object.keys(infpol.variables).length > 3) {
+    desls.forEach((desl) => {
+      infpol.variables[desl.id]=Number.parseFloat(desl.value);
+    });
+  }
+  return infpol;
+}
+
 function CasoIreducible(c:number[]): number[] {
   const p=c[1];
   const q=c[0];
@@ -90,4 +101,4 @@ function Raices(coefs: number[]) : number[] {
   return r;
 }
 
-export {ConstruyeFunParFijo, Raices} 
+export {ConstruyeFunParFijo, ConstruyeFunParamFijos, Raices} 
