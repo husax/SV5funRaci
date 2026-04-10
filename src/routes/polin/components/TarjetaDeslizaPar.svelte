@@ -9,7 +9,7 @@
     textos: Array<string>;
     otrosTextos: string;
     latex: string;
-    deslProps: DeslPr;
+    deslizadores: Array<DeslPr>;
     actualizaVal: funEvent;
     contyPreg: funEvent;
   }
@@ -19,7 +19,7 @@
     textos,
     otrosTextos,
     latex,
-    deslProps,
+    deslizadores,
     actualizaVal,
     contyPreg
   }: Props = $props();
@@ -32,8 +32,10 @@
 <Tarjeta {isOpen} {textos}>
   <div class="centra">
     <MathQuillStatic {latex} />
-  </div>  
-  <Deslizador valor={deslProps.value} {deslProps} {actualizaVal}/>
+  </div>
+  {#each deslizadores as desl (desl.id) }
+    <Deslizador valor={desl.value} deslProps={desl}  {actualizaVal}/>
+  {/each}
   <div class="separa">
     {otrosTextos}
   </div>

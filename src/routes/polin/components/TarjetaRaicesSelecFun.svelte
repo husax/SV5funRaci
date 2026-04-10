@@ -1,13 +1,13 @@
 <script lang="ts">
   import Tarjeta from './Tarjeta.svelte';
-  import { Button, ListGroup, ListGroupItem } from '@sveltestrap/sveltestrap';
+  import {ListGroup, ListGroupItem } from '@sveltestrap/sveltestrap';
   import MathQuillStatic  from "$lib/components/MathQuillStatic.svelte";
   interface Props {
     isOpen: boolean;
     textos: Array<string>;
     arrLatex: Array<string>;
-    opcion: any;
-    apagaTutor: any;
+    opcion: (e: MouseEvent) => void;
+    apagaTutor: () => void;
   }
 
   let {
