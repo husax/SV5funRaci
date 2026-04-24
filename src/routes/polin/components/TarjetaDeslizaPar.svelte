@@ -3,14 +3,14 @@
   import {Button } from '@sveltestrap/sveltestrap';
   import  MathQuillStatic  from "$lib/components/MathQuillStatic.svelte";
   import Deslizador from "$lib/components/Deslizador.svelte";
-  import type { DeslPr, funEvent } from '$lib/tools/tipos';
+  import type { DeslPr, funEvent, funEventInput } from '$lib/tools/tipos';
   interface Props {
     isOpen: boolean;
     textos: Array<string>;
     otrosTextos: string;
     latex: string;
     deslizadores: Array<DeslPr>;
-    actualizaVal: funEvent;
+    actualizaVal: funEventInput;
     contyPreg: funEvent;
   }
 
@@ -34,7 +34,7 @@
     <MathQuillStatic {latex} />
   </div>
   {#each deslizadores as desl (desl.id) }
-    <Deslizador valor={desl.value} deslProps={desl}  {actualizaVal}/>
+    <Deslizador valor={desl.value} deslProps={desl}  actualizaVal={actualizaVal}/>
   {/each}
   <div class="separa">
     {otrosTextos}

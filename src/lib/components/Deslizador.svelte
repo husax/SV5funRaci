@@ -1,9 +1,9 @@
 <script lang="ts">
-import type { DeslPr } from "../tools/tipos";
+import type { DeslPr, funEventInput } from "$lib/tools/tipos";
   interface Props {
     valor: string;
     deslProps: DeslPr;
-    actualizaVal: (e: Event) => void;
+    actualizaVal: funEventInput;
   }
 
   let { valor, deslProps, actualizaVal }: Props = $props();
@@ -23,7 +23,7 @@ let etiq= $derived(deslProps.id+"="+valor);
     min={deslProps.min}
     max={deslProps.max}
     step={deslProps.step}
-    value={valor}
+    bind:value={valor}
     oninput={actualizaVal}
   />
   {etiq}

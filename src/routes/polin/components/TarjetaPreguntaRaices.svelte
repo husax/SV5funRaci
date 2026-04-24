@@ -5,7 +5,7 @@
   import {IoCheckmarkCircle, IoCloseCircle} from "svelte-icons-pack/io"
   import MathQuillStatic  from "$lib/components/MathQuillStatic.svelte";
 	import Deslizador from '$lib/components/Deslizador.svelte';
-  import type { DeslPr, funEvent } from '$lib/tools/tipos';
+  import type { DeslPr, funEventInput } from '$lib/tools/tipos';
   import { resp1} from "$lib/tools/Almacen";
   
   //export let isOpen: boolean;
@@ -15,7 +15,7 @@
     otrosTextos: Array<string>;
     latex: string;
     deslProps: DeslPr;
-    actualizaVal: funEvent;
+    actualizaVal: funEventInput;
     regresa: any;
   }
 
@@ -73,7 +73,7 @@
   <div class="centra">
     <MathQuillStatic {latex}/>
   </div>
-  <Deslizador valor={deslProps.value} {deslProps} {actualizaVal}/>
+  <Deslizador valor={deslProps.value} {deslProps} actualizaVal={actualizaVal}/>
   <div class="separa">
     <ListGroup numbered class="conMargen">
       {#each otrosTextos as texto, ind}

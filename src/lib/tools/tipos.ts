@@ -1,11 +1,13 @@
 
 
+import type { FormEventHandler } from 'svelte/elements';
 import type { Polinomio, FunRacional } from './Polinomio';
 //type Board= typeof JXG.Board;
 //type GeomElem= typeof JXG.GeometryElement;
 type funTipo= FunRacional | Polinomio;
 type funR= (x:number) => number | undefined;
 type funEvent= (e: Event) => void;
+type funEventInput= FormEventHandler<HTMLInputElement>;  
 type funReal= funR | undefined;
 
 interface OptMenu {
@@ -70,5 +72,6 @@ export type {
   DeslPr,
   funR,
   funReal,
-  funEvent
+  funEvent,
+  funEventInput
 } 

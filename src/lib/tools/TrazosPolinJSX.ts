@@ -1,5 +1,6 @@
 import type {DeslPr } from "./tipos";
 import { InfijaAPolacaFR } from "./InfAPolInv";
+import JXG from "jsxgraph"; 
 
 
 function ConstruyeFunParFijo(cad: string, desl: DeslPr) {
@@ -10,6 +11,7 @@ function ConstruyeFunParFijo(cad: string, desl: DeslPr) {
   }
   return infpol;
 }
+
 
 function ConstruyeFunParamFijos(cad: string, desls: Array<DeslPr>) {
   const infpol= new InfijaAPolacaFR(cad);
@@ -69,14 +71,26 @@ function RaicesVieta(coefs:number[]) : number[] {
   return CasoIreducible(c); 
 }
 
+function AproxRaices(coefs: number[]): number[] {
+  let r= new Array<number>;
+  const coefsinv= coefs.slice().reverse();
+  const grado= coefs.length - 1;
+    r=JXG.Math.Numerics.polzeros(coefsinv,grado,1e-12,1000);
+    console.log(r);
+    return r;
+}
+
 function Raices(coefs: number[]) : number[] {
   let r= new Array<number>;
   let d: number;  
+  while (coefs.length > 1 && coefs[0] === 0) {
+    coefs.shift();
+  }
   switch (coefs.length) {
     case 0:
       break;
     case 1:
-      if (coefs[0] !== 0) {
+      if (coefs[0] === 0) {
         r[0]=0;
       }
       break;
@@ -95,6 +109,9 @@ function Raices(coefs: number[]) : number[] {
         r=RaicesVieta(coefs);
         r= r.sort((a,b) => a - b);
       break;
+      case 5:
+      case 6:
+          r=AproxRaices(coefs);
     default:
       break;
   }

@@ -1,4 +1,5 @@
 <script lang="ts"> 
+	import { ArrNum } from '$lib/tools/ConvierteData';
 	import { onDestroy } from 'svelte';
   import TarjetaRaicesSelecFun from './TarjetaRaicesSelecFun.svelte';
 	import TarjetaDeslizaPar from './TarjetaDeslizaPar.svelte';
@@ -10,10 +11,11 @@
 	import { InfijaAPolacaFR } from '$lib/tools/InfAPolInv';
 	import { BorraObjGraficos, GraficaRaices } from '$lib/tools/TrazosJSXGraph';
 	import { getBrd } from '$lib/tools/EstadosGlobales.svelte';
+	import { Polinomio } from '$lib/tools/Polinomio';
 	
 
   let latex: string = $state("");
-  let arrLatex: string[]= ['f(x)=x^2+4x+a', 'g(x)=x^3-3x+b', ' h(x)=ax^5+bx^4+cx^3+dx^2+ex+f'];
+  let arrLatex: string[]= ['f(x)=ax^2+bx+c', 'g(x)=ax^3+bx^2+cx+d', ' h(x)=ax^5+bx^4+cx^3+dx^2+ex+f'];
 
   let deslizadores: Array<DeslPr> = $state(Array<DeslPr>(6).fill(
       { id: "a",
@@ -42,7 +44,7 @@
 
   let textosCont= ["Revisa gráficamente cuántas raices reales tiene un polinomio."
                 + "<br> Elige un tipo de polinomio.",
-                "Mueve el deslizador para observar cómo cambia el número"
+                "Mueve los deslizadores para observar cómo cambia el número"
                 + " de raices de: ",
                 "Cuando termines de explorar, oprime Continuar para responder" 
                 + " algunas preguntas relacionadas con las raices.",
@@ -76,26 +78,36 @@
         return InfijaAPolacaFR.Eval(infpol.postFija, infpol.variables);
     }
     const board= getBrd();
-    let brdAttributes= {
-      axis: true,
-      boundingbox: board.getBoundingBox(),
-    }
-    // hay que calcular las raices reales en python
-    pF={
-      func: fun,
-      name: "f(x)",
-      color: "red",
-      raices: Raices(coefs),
-      traza: false,
-      ventana: brdAttributes,
-      idFuns: [],
-      idRaices:[],
-    };
-    BorraObjGraficos(board, pF);
-    pF.idFuns.push(board.create('functiongraph', [fun]));
-      //GraficaRaices(board, pF);
-
-
+    let polin= new Polinomio(coefs);
+    const cadPolin= polin.toString();
+    const url = 'http://127.0.0.1:5000/api/v1/raices_reales/' + cadPolin;
+		const respPromesa = fetch(url, { method: 'GET', mode: 'cors' });
+    respPromesa.then((response) => {
+      if (!response.ok) {
+        throw new Error('Error en la solicitud: ' + response.status);
+      }
+      return response.json();
+    }).then((data) => {
+      let raices= ArrNum(data.raices);
+      pF={
+        func: fun,
+        name: "f(x)",
+        color: "red",
+        raices: raices,
+        traza: false,
+        ventana: {
+          axis: true,
+          boundingbox: board.getBoundingBox(),
+        },
+        idFuns: [],
+        idRaices:[],
+      };
+      BorraObjGraficos(board, pF);
+      pF.idFuns.push(board.create('functiongraph', [fun]));
+      GraficaRaices(board, pF);
+    }).catch((error) => {
+      console.error('Error:', error);
+    });
   }
 
   const opcion= (e: MouseEvent) => {
@@ -164,20 +176,40 @@
     textosMult= textosCont.slice(3, 6);
   }
 
-  function actualizaVal (e: Event): void {
-    deslProps.value= e.target ? e.target.value : deslProps.value;
+  function actualizaVal (e: Event & { currentTarget: EventTarget & HTMLInputElement }): void {
+    //deslProps.value= e.target ? e.target.value : deslProps.value;
     //resp1=deslProps.value;
-    infpol.variables[deslProps.id]=Number.parseFloat(deslProps.value);
+    if (e.target === null) return;
+    infpol.variables[e.target.id]=Number.parseFloat(e.target.value);
     let funRac=InfijaAPolacaFR.EvalFuncRac(infpol.postFija, infpol.variables);
     let coefs= new Array<number>;
     if (funRac !== undefined) {
       coefs= funRac.coefs;  
     }
-    pF.raices= Raices(coefs);
-    const board= getBrd();
-    BorraObjGraficos(board, pF);
-    pF.idFuns.push(board.create('functiongraph', [fun]));
-    GraficaRaices(board, pF);
+    /* fun= (x: number) => {
+      infpol.variables["x"]=x;
+      return InfijaAPolacaFR.Eval(infpol.postFija, infpol.variables);
+    } */
+    let polin= new Polinomio(coefs);
+    const cadPolin= polin.toString();
+    const url = 'http://127.0.0.1:5000/api/v1/raices_reales/' + cadPolin;
+		const respPromesa = fetch(url, { method: 'GET', mode: 'cors' });
+    respPromesa.then((response) => {
+      if (!response.ok) {
+        throw new Error('Error en la solicitud: ' + response.status);
+      }
+      return response.json();
+    }).then((data) => {
+      let raices= ArrNum(data.raices);
+      pF.raices= raices;
+      const board= getBrd();
+      BorraObjGraficos(board, pF);
+      pF.idFuns.push(board.create('functiongraph', [fun]));
+      GraficaRaices(board, pF);
+    }).catch((error) => {
+      console.error('Error:', error);
+    });
+    
   }
 
   function regresa () {
