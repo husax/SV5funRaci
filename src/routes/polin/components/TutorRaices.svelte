@@ -80,6 +80,7 @@
     const board= getBrd();
     let polin= new Polinomio(coefs);
     const cadPolin= polin.toString();
+    latex= "h(x)=" + cadPolin.replace(/\*\*/g, "^"); // para mostrar en mathquill
     const url = 'http://127.0.0.1:5000/api/v1/raices_reales/' + cadPolin;
 		const respPromesa = fetch(url, { method: 'GET', mode: 'cors' });
     respPromesa.then((response) => {
