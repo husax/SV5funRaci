@@ -4,9 +4,10 @@
 
   interface Props {
     latex: string;
+    MQref: any;
   }
 
-  let { latex } : Props = $props();
+  let { latex, MQref= $bindable() } : Props = $props();
   let caja: HTMLSpanElement | null = null;
 
   onMount(() =>{
@@ -15,7 +16,7 @@
       console.error("no se hizo el bind de caja al span creado en MathQuillStatic");
       return;
     } 
-    MQ.StaticMath(caja);
+    MQref=MQ.StaticMath(caja);
 });
 </script>
 

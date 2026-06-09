@@ -1,6 +1,7 @@
 <script lang="ts"> 
 	import { ArrNum } from '$lib/tools/ConvierteData';
 	import { onDestroy } from 'svelte';
+  import  MathQuillStatic  from "$lib/components/MathQuillStatic.svelte";
   import TarjetaRaicesSelecFun from './TarjetaRaicesSelecFun.svelte';
 	import TarjetaDeslizaPar from './TarjetaDeslizaPar.svelte';
   	import TarjetaPreguntaRaices from './TarjetaPreguntaRaices.svelte';
@@ -15,6 +16,8 @@
 	
 
   let latex: string = $state("");
+  let cajaPol: HTMLSpanElement | null = $state(null);
+
   let arrLatex: string[]= ['f(x)=ax^2+bx+c', 'g(x)=ax^3+bx^2+cx+d', ' h(x)=ax^5+bx^4+cx^3+dx^2+ex+f'];
 
   let deslizadores: Array<DeslPr> = $state(Array<DeslPr>(6).fill(
@@ -79,8 +82,9 @@
     }
     const board= getBrd();
     let polin= new Polinomio(coefs);
-    const cadPolin= polin.toString();
-    latex= "h(x)=" + cadPolin.replace(/\*\*/g, "^"); // para mostrar en mathquill
+    let cadPolin= polin.toString(true);
+    let cadLatex= cadPolin.replaceAll("**", "^");
+    latex= "h(x)=" + cadLatex.replaceAll("*", ""); // para mostrar en mathquill
     const url = 'http://127.0.0.1:5000/api/v1/raices_reales/' + cadPolin;
 		const respPromesa = fetch(url, { method: 'GET', mode: 'cors' });
     respPromesa.then((response) => {
@@ -192,7 +196,10 @@
       return InfijaAPolacaFR.Eval(infpol.postFija, infpol.variables);
     } */
     let polin= new Polinomio(coefs);
-    const cadPolin= polin.toString();
+    const cadPolin= polin.toString(true);
+    let cadLatex= cadPolin.replaceAll("**", "^");
+    cadLatex= cadLatex.replaceAll("*", "");
+    latex= "h(x)=" + cadLatex; // para mostrar en mathquill
     const url = 'http://127.0.0.1:5000/api/v1/raices_reales/' + cadPolin;
 		const respPromesa = fetch(url, { method: 'GET', mode: 'cors' });
     respPromesa.then((response) => {
@@ -229,7 +236,7 @@
 </script>
 
   <TarjetaRaicesSelecFun isOpen={IsOpenSeq[0]} textos={textosTarj} {arrLatex} {opcion} {apagaTutor}/>
-  <TarjetaDeslizaPar isOpen={IsOpenSeq[1]} textos={textosTarj} otrosTextos={textosCont[2]}
+   <TarjetaDeslizaPar isOpen={IsOpenSeq[1]} textos={textosTarj} otrosTextos={textosCont[2]}
                     {latex} {deslizadores} {actualizaVal} {contyPreg} />
   <TarjetaPreguntaRaices {IsOpenSeq} textos={textosTarj} otrosTextos={textosMult}
                     {latex} {deslProps} {actualizaVal} {regresa}/>

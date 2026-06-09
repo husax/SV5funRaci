@@ -161,11 +161,12 @@ class Polinomio {
       return pdeX;
   }
 
-  toString(): string {
+  toString(reverse = false): string {
     let cad = "";
     let signo = "";
-    this.#coefs.forEach((c, i) => {
-      c = this.#coefs[i];
+    let arr = this.coefs;
+    let arrcad = new Array<string>();
+    arr.forEach((c, i) => {
       if (c !== 0) {
         signo = c > 0 ? "+" : "-";
         c = Math.abs(c);
@@ -178,14 +179,19 @@ class Polinomio {
           cad += i > 1 ? "**" + i.toString() : "";
         }
       }
+      arrcad.push(cad);
+      cad="";
     });
-    if (cad === "") {
-        cad = "0";
+    if (reverse) {
+      arrcad.reverse();
     }
-    else if (cad[0] === "+") {
-      cad = cad.slice(1);
+    if (arrcad.length === 0 || arrcad.every((v) => v === "")  ) {
+        return "0";
     }
-    return cad;
+    else if (arrcad[0][0] === "+") {
+      arrcad[0] = arrcad[0].slice(1);
+    }
+    return arrcad.join("");
   }
 
   Derivada(): Polinomio {

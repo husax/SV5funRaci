@@ -32,7 +32,7 @@
 		"vite": "^6.3.4"
 	},
 	"dependencies": {
-		"@openwebwork/mathquill": "^0.11.0",
+		"@openwebwork/mathquill": "^0.11.4",
 		"@sveltestrap/sveltestrap": "^7.1.0",
 		"jquery": "^3.7.1",
 		"jsxgraph": "^1.11.1",
