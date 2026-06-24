@@ -7,10 +7,19 @@ function ArrNum(cad: string | undefined) {
       return [];
     }
     const arreglo = cad.slice(1, len - 1).split(', ');
-    return arreglo.map((x: string) => Number.parseFloat(x));
+    return arreglo.map((x: string) => FraccionyDecimal(x));
   }
   return new Array<number>();
 }
+
+//convierte una cadena que representa una fracción a un número decimal y 
+// una cadena que representa un número decimal a un número decimal,
+//  si la cadena no es válida devuelve 0
+function FraccionyDecimal(x: string) {
+  const [numerator, denominator] = x.split('/').map(Number);
+  return denominator === undefined ? numerator : denominator !== 0 ? numerator / denominator : 0;
+}
+
 //convierte cadena true a booleano
 const cadBul = (cad: string) => cad.toLowerCase() === "true" ? true : false;
 
