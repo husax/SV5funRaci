@@ -27,34 +27,6 @@
 
   let MQref: any = $state(null);
 
-  //let
-  function filtro(e: any) {
-    const teclasEsp = [
-      "ArrowLeft",
-      "ArrowRight",
-      "ArrowUp",
-      "ArrowDown",
-      "Delete",
-      "Enter",
-      "Insert",
-      "Backspace",
-      "Home",
-      "End",
-    ];
-    const caracAcep = "0123456789x+-/*^()=.sqrtpi";
-    if (teclasEsp.indexOf(e.key) !== -1 || caracAcep.indexOf(e.key) !== -1) {
-      return;
-    }
-    // impide que se realice la acción por defecto del evento
-    e.preventDefault();
-  }
-
-  let config= {
-    charsThatBreakOutOfSupSub: "+-()",
-    autoCommands: "pi sqrt",
-  };
-
-
   function actualiza(e: Event & { currentTarget: EventTarget & HTMLInputElement }) :void{
     actualizaVal(e);
     MQref.latex(latex);
@@ -63,19 +35,15 @@
 </script>
 
 <Tarjeta {isOpen} {textos}>
-  {#if isOpen}
     <div class="centra">
       <MathQuillStatic {latex} bind:MQref={MQref} />
     </div>
-  {/if}
-  
   {#each deslizadores as desl (desl.id) }
     <Deslizador valor={desl.value} deslProps={desl}  actualizaVal={actualiza}/>
   {/each}
   <div class="separa">
     {otrosTextos}
   </div>
-  <p class="centra">{latex}</p>
   <div class="separa">
     <Button outline color="success" on:click={contyPreg}>Continuar</Button>
   </div>
